@@ -1,34 +1,30 @@
+(declaim (optimize (speed 3) (safety 0) (debug 0)))
+
 (defconstant +dynamic+ "Dynamic")
 (defconstant +not+ "Not")
 
+(defun check-dynamic (p)
+  (print p)
+  (when (< (length p) 3)
+    (return-from check-dynamic +dynamic+))
+  (dotimes (i (length p))
+    (dotimes (j (length p))
+      (dotimes (k (length p))
+        (when (and (> k j i) (= (aref p k) (+ (aref p j) (aref p i))))
+          (return-from check-dynamic +dynamic+)))))
+  +not+)
 
-(defun check-dynamic (permutations)
-  )
-
-(defun get-permutations (table)
-  (let ((idx 0)
-        (set (make-hash-table :size 26 :element-type 'fixnum)))
-    (maphash (lambda (k v) 
-               (cond ((not (gethash v set)) (setf (gethash v set) v))
-                     ((not (gethash (/ 1 v) set)) (setf (gethash v set) v))))
-            table)
-    (sort (make-array (hash-table-count set)) #'>)))
-
-(defun get-chars (str)
-  (let ((table (make-hash-table :size 26)))
-    (dotimes (i (length str) (check-dynamic table))
-      (if (not (gethash (char str i) table))
-          (setf (gethash (char str i) table) 1)
-          (incf (gethash (char str i) table))))))
-
-(defun get-chars2 (str)
+(defun get-answer (str)
   (let ((table (make-array 26 :element-type 'fixnum)))
-    (dotimes (i (length str))
-      ()
-      )
-    )
-  )
+    (dotimes (i (length str) 
+                (check-dynamic (remove-if #'zerop (sort table #'<))))
+      (incf (aref table (- (char-code (aref str i)) 97))))))
 
-(dotimes (x (read))
-  (print (get-dynamic (read))))
 
+(declaim (inline get-answer check-dynamic))
+
+(defun main ()
+  (dotimes (x (read))
+    (format t "~A~%" (get-answer (read-line)))))
+
+(main)
