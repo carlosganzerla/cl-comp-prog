@@ -7,37 +7,7 @@
                ((>= idx n) current)
                (psetf current (+ prev current) prev current)))))
 
-(defun main ()
-  (dotimes (x (read))
-    (print (mod (fib (1- (expt 2 (floor (log (read) 2))))) 10))))
-
-(dotimes (x 30)
-  (print (fib (* 10 x))))
-
-(dotimes (x 30)
-  (format t "~A ~A~%" (fib x) (fib-10 x)))
-
-(dotimes (x 30)
-  (print (fib-10 30)))
-
-
-(typep 576460752303423488 '(integer 0 1000000000000000000))
-
-(print (mod (fib (1- (expt 2 (floor (log 1000000000000000000 2))))) 10))
-
-
-(defvar *pattern-10* #(0 5 5))
-(defvar *pattern-11* #(1 9 6 9 1 4))
-(defvar *pattern-12* #(1 4 1 9 6 9))
-(defvar *pattern-12* #(2 3 7 8 7 3))
-
-(defun fib-10 (n)
-  
-  (let ((mod10 (mod n 10))
-        (div10 (floor (/ n 10))))
-    (do ((prev ())))
-    )
-  )
+(declaim (optimize (speed 3) (safety 0) (debug 0)))
 
 (defun fib-10 (n)
   (declare ((integer 0 1000000000000000000) n))
@@ -55,3 +25,18 @@
                    (t (error "Not good")))))
     (aref pattern (mod (floor (/ n 10)) (length pattern)))))
 
+(declaim (inline fib-10))
+
+(defun main ()
+  (dotimes (x (read))
+    (format t "~A~%" (fib-10 (1- (expt 2 (floor (log (read) 2))))))))
+
+(fib 1)
+(fib 2)
+(fib 4)
+(fib 7)
+(fib 7)
+
+
+(dotimes (x 100)
+  (print (mod (fib (1+ (* 10 x))) 10)))
