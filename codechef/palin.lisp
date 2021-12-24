@@ -1,0 +1,30 @@
+
+(defun next (num)
+  (let* ((half (/ (length num) 2))
+         (lidx (floor half))
+         (ridx (ceiling half))
+         (mid (1- ridx))
+         (l (parse-integer (subseq num 0 ridx)))
+         (l-inv (parse-integer (nreverse (subseq num 0 lidx))))
+         (r (parse-integer (subseq num ridx))))
+    (if (>= r l-inv)
+        (let ((num (format nil "~A"(+ l (expt 10 (- (length num) mid 1))))))
+          (next num)) 
+        (format nil "~A~A" l l-inv))))
+
+(let* ((arr #(0 1 2 3 4))
+       (sub (subseq arr 0 3)))
+  (incf (aref sub 1))
+  (print sub)
+  (print arr)
+  nil)
+
+
+(next "818")
+
+(defun to-array (n)
+  (let* ((d (ceiling (log n 10)))
+         (vec (make-array d :element-type 'fixnum)))
+    (dotimes (i d vec)
+      (setf (aref vec (- d 1 i)) (floor (mod n (expt 10 (1+ i)))
+                                        (expt 10 i))))))

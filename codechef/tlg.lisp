@@ -1,0 +1,6 @@
+(let ((total1 0) (total2 0) (winner 0))
+  (dotimes (_ (read) (format t "~A ~A~%" (if (>= winner 0) 1 2) (abs winner)))
+    (incf total1 (read))
+    (incf total2 (read))
+    (when (> (abs (- total1 total2)) (abs winner))
+      (setf winner (- total1 total2)))))
