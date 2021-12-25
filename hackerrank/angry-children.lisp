@@ -1,0 +1,13 @@
+(defun find-min (arr k)
+  (let ((min 1000000001))
+    (dotimes (i (1+ (- (length arr) k)) min)
+      (let ((unfairness (- (aref arr (+ i (1- k))) (aref arr i))))
+        (when (< unfairness min)
+          (setf min unfairness))))))
+
+(let* ((n (read))
+       (k (read))
+       (arr (make-array n :element-type 'fixnum)))
+  (dotimes (i n)
+    (setf (aref arr i) (read)))
+  (format t "~A~%" (find-min (sort arr #'<) k)))
