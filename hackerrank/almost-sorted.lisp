@@ -53,7 +53,7 @@
 
 
 (defun get-ans (arr)
-  (let ((swap (swap-case arr)))
+  (let ((swap (swap-case (subseq arr 0))))
     (if swap
         (print-ans swap "swap")
         (print-ans (reverse-case arr) "reverse"))))
@@ -74,10 +74,13 @@
 (get-ans #(1 2 5 4 3 10 11 12 13 15))
 (get-ans #(1 3 5 4))
 
-(swap-case #(1 9 3 4 5 2))
+(get-ans #(1 5 4 3 2 6))
+(reverse-case #(1 5 4 3 2 6))
+(reverse-case #(1 5 4 3 2 6))
+
 (swap-case #(5 4))
 (swap-case #(1 4 3 2))
 (swap-case #(1 5 4 6))
 (swap-case #(3 1 2))
 (swap-case #(1 5 4 6))
-(swap-case #(2 1))
+(reverse-case #(43 65 1 98 99 101))
