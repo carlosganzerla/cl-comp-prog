@@ -6,33 +6,65 @@
 
 (defun check-reverse-case (arr idx)
   (do ((i (1+ idx) (1+ i)))
-      ((>= i (1- (length arr))) (list idx i))
+      ((>= i (1- (length arr))) (cons idx i))
       (when (and (> idx 0) 
                  (< (aref arr (1+ i)) (aref arr (1- idx))))
         (return))
       (when (< (aref arr i) (aref arr (1+ i)))
         (setf (aref arr i) (aref arr idx))
         (if (and (> idx 0) (check-sorted arr i))
-            (return (list idx i))
+            (return (cons idx i))
             (return)))))
 
 (defun reverse-case (arr)
   (do ((i 0 (1+ i)))
       ((>= i (1- (length arr))) t)
       (when (> (aref arr i) (aref arr (1+ i)))
-        (return (operation arr i)))))
+        (return (check-reverse-case arr i)))))
 
 (defun swap-case (arr)
   (do ((i 0 (1+ i))
        (c nil))
-      ((>= i (1- (length arr))) t)
-      (when (> (aref arr i) (aref arr (1+ i)))
-        (if c
-            (progn )
-            (setf c i)
+      ((>= i (length arr)) (not c))
+      (when (and (< i (length arr)) (not c) 
+                 (> (aref arr i) (aref arr (1+ i))))
+        (setf c i))
+      (when (and c
+                 (or (and (= c 0) (<= (aref arr i)
+                                      (aref arr (1+ c))))
+                     (and (> c 0) (<= (aref arr (1- c))
+                                      (aref arr i)
+                                      (aref arr (1+ c))))))
+        (psetf (aref arr i) (aref arr c)
+               (aref arr c) (aref arr i))
+        (if (check-sorted arr 0)
+            (return (cons c i))
+            (return)))))
 
-            ))))
 
+(defun print-ans (ans ans-type)
+  (if ans
+      (progn (format t "yes~%")
+             (when (consp ans)
+               (format t "~A ~A ~A~%" ans-type (1+ (car ans))
+                       (1+ (cdr ans)))))
+
+      (format t "no~%")))
+
+
+(defun get-ans (arr)
+  (let ((swap (swap-case arr)))
+    (if swap
+        (print-ans swap "swap")
+        (print-ans (reverse-case arr) "reverse"))))
+
+(defun main ()
+  (let* ((n (read))
+         (arr (make-array n :element-type 'fixnum)))
+    (dotimes (i n (get-ans arr))
+      (setf (aref arr i) (read)))))
+
+(main)
 
 (get-ans #(1 2))
 (get-ans #(2 1))
@@ -40,4 +72,12 @@
 (get-ans #(1 5 4 6))
 (get-ans #(2 3 4 4 5 9 7 6 5))
 (get-ans #(1 2 5 4 3 10 11 12 13 15))
+(get-ans #(1 3 5 4))
 
+(swap-case #(1 9 3 4 5 2))
+(swap-case #(5 4))
+(swap-case #(1 4 3 2))
+(swap-case #(1 5 4 6))
+(swap-case #(3 1 2))
+(swap-case #(1 5 4 6))
+(swap-case #(2 1))
