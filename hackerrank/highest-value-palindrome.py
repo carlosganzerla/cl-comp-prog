@@ -1,41 +1,40 @@
 #!/bin/python3
-ldsall
 
 def highest_value_palindrome(s, n, k):
     if len(s) == 1 and k:
         return '9'
+
     l = list(s[0:n//2])
     m = list(s[n//2:n-n//2])
     r = list(s[n-n//2:][::-1])
-    assert len(l) == len(r)
-    assert len(m) <= 1
     d = [ i for i in range(0, len(l)) if l[i] != r[i] ]
+    k_min = len(d)
+
+    if k_min > k:
+        return '-1'
+
     u = k
-    for i in reversed(d):
-        if u > 0 and l[i] != r[i]:
-            l[i] = max(l[i], r[i])
-            r[i] = l[i]
-            u -= 1
-        else:
-            return '-1'
 
-    for i in range(0,len(l)):
-        debit = 0 if i in d else 1
-        if u > 0:
-            if l[i] != '9' and r[i] != '9' and u >= 1 + debit:
-                u -= 1 + debit
-                l[i] = '9'
-                r[i] = '9'
-            elif r[i] != '9' and u >= debit:
-                r[i] = '9'
-                u -= debit
-            elif l[i] != '9' and u >= debit:
-                l[i] = '9'
-                u -= debit
+    for i in range(0, len(l)):
+        cost = int(l[i] != '9') + int(r[i] != '9')
+        kmin_dec = int(i in d)
+        if cost + k_min - kmin_dec > u:
+            break
+        u -= cost
+        l[i] = '9'
+        r[i] = '9'
+        if kmin_dec:
+            k_min -= kmin_dec
+            d.remove(i)
 
+    for i in d:
+        l[i] = max(l[i], r[i])
+        r[i] = max(l[i], r[i])
+        u -= 1
 
     if u and m:
         m[0] = '9'
+
 
     return ''.join(l + m + r[::-1])
     # Write your code here
