@@ -1,4 +1,5 @@
 #!/bin/python3
+ldsall
 
 def highest_value_palindrome(s, n, k):
     if len(s) == 1 and k:
