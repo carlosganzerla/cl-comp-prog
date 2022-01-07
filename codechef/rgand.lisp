@@ -1,3 +1,4 @@
+#+nil
 (defun slow-ans (l r)
   (do ((s 0)
        (i l (1+ i)))
@@ -6,52 +7,29 @@
            (x l (logand x j)))
           ((> j i) (incf s x)))))
 
-(bit-and 5 6)
-
-(slow-ans 4 10)
-(slow-ans 13 18)
-
-(logand 10 11)
-
-(defun to-bits (integer)
-  (let ((i integer)
-        (bits (make-array (integer-length integer) 
-                          :element-type 'bit)))
-    (dotimes (j (length bits) bits)
-      (setf (aref bits (- (length bits) j 1)) (logand i 1))
-      (setf i (ash i -1)))) )
-
-(defun from-bits (vector)
-  (let ((n 0))
-    (dotimes (i (length vector) n)
-      (incf n (* (bit vector i) (expt 2 (- (length vector) i 1)) )))))
-
-
-(defun fast-ans (l)
-  (do* ((vec (to-bits l))
-        (i 0 (1+ i))
-        (occ (make-array (length vec))))
-    ((>= i (length vec)) occ)
-    (let ((n (expt 2 i)))
-      (setf (aref occ (- (length vec) 1 i)) (- n (mod l n))))))
-
-
-(fast-ans 13)
-
-(defun fast-ans (l)
+(defun fast-ans (l r)
   (do ((i 0 (1+ i))
-       (nums nil))
-      ((>= i (integer-length l)) nums)
+       (sum 0)
+       (max (- (1+ r) l))
+       (nums 0))
+      ((>= i (integer-length l)) sum)
       (let* ((e (expt 2 (1+ i)))
              (c (- e (mod l e)))
-             (p (logxor l (mod l (expt 2 i)))))
-        (format t "~A ~A ~A~%" e c p)
-        (dotimes (_ (- c (length nums)))
-          (push p nums)))))
+             (p (logxor l (mod l (expt 2 i))))
+             (k (max 0 (min (* (- c nums)) (- max nums)))))
+        (setf sum (mod (+ sum (* k p)) 1000000007))
+        (incf nums k))))
 
-(fast-ans 4)
-(fast-ans 1)
-(fast-ans 13)
+(defun main ()
+  (dotimes (_ (read))
+    (format t "~A~%" (fast-ans (read) (read)))))
 
-(logxor 13 1)
+(main)
 
+#+nil
+(dotimes (_ 100 (format t "OK~%"))
+  (let ((x (1+ (random 10000)))
+        (y (1+ (random 10000))))
+    (when (/= (slow-ans x y) (fast-ans x y))
+      (format t "~A ~A" x y)
+      (return))))
