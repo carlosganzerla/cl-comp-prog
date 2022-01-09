@@ -1,20 +1,17 @@
-def ans(arr):
-    n = len(arr)
+def ans(arr, n):
     sums = {}
     for i in range(0, n):
         for j in range(i + 1, n):
             sum = arr[i] + arr[j]
-            if (sum in sums and
-                    i not in sums[sum] and
-                    j not in sums[sum]):
-                sums[sum][i] = True
-                sums[sum][j] = True
-            elif sum not in sums:
-                sums[sum] = { i: True, j: True }
-    return max([ len(v) for _, v in sums.items() ])
+            if sum in sums:
+                sums[sum] += 1
+            else:
+                sums[sum] = 1
+
+    return 2 * max([ v for _, v in sums.items() ])
 
 if __name__ == '__main__':
-    input()
+    n = int(input().rstrip())
     arr = list(map(int, input().rstrip().split()))
-    result = ans(list(set(arr)))
+    result = ans(arr, n)
     print(result)
