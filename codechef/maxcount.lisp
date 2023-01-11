@@ -1,0 +1,25 @@
+(defconstant +size+ 10000)
+(defvar *buffer* (make-array +size+ :element-type 'fixnum))
+
+
+(defun maxcount (arr)
+  (dotimes (i (length arr))
+    (setf (aref *buffer* (1- (aref arr i))) 0))
+  (do ((i 0 (1+ i))
+       (results (cons 0 (1+ +size+))))
+      ((>= i (length arr)) results)
+      (let* ((A (aref arr i))
+             (freq (incf (aref *buffer* (1- A)))))
+        (when (or (> freq (car results))
+                  (and (= freq (car results)) (< A (cdr results))))
+          (setf results (cons freq A))))))
+
+(defun main ()
+  (dotimes (_ (read))
+    (let ((input (make-array (read) :element-type 'fixnum)))
+      (dotimes (i (length input))
+        (setf (aref input i) (read)))
+      (let ((result (maxcount input)))
+        (format t "~A ~A~%" (cdr result) (car result))))))
+
+(main)
