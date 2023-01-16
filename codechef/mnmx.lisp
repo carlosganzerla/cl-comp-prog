@@ -1,0 +1,10 @@
+(defun main ()
+  (dotimes (_ (read))
+    (let ((n (read))
+          (minval 100000))
+      (dotimes (_ n)
+        (setf minval (min (read) minval)))
+      (write (* (1- n) minval))
+      (terpri))))
+
+(main)
