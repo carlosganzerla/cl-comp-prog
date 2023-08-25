@@ -7,7 +7,7 @@ def ans(L, R):
     for i in range(int(log10(L)), int(log10(R)) + 1):
         first = max(L, 10**i)
         last = min(R, 10**(i + 1) - 1)
-        term = (i + 1) * (last - first + 1) * (first + last) / 2
+        term = (i + 1) * (last - first + 1) * (first + last) // 2
         ans = (ans + term) % MOD
 
     return ans
