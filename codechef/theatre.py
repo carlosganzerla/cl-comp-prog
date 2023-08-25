@@ -1,33 +1,30 @@
-MOVIES = set("ABCD")
-TIMES = {"12", "3", "6", "9"}
+from itertools import permutations
+
+MOVIES = [0, 1, 2, 3]
+PRICES = [25, 50, 75, 100]
 
 
 def ans(requests):
-    req_map = {m + t: 0 for m in MOVIES for t in  TIMES }
+    slots = [[0 for _ in range(0, 4)] for _ in range(0, 4)]
     for m, t in requests:
-        req_map[m + t] += 1
+        slots[int(t) // 3 - 1][ord(m) - ord("A")] += 1
 
-    exclude = set()
-    req_map = {k: v for k, v in req_map.items() if v }
-    sorted_reqs = sorted(req_map.items(), reverse=True, key=lambda kv: kv[1])
-    price = 100
-    ans = 0
-    for mt, v in sorted_reqs:
-        m, t = mt[0], mt[1:]
-        if t not in exclude and m not in exclude:
-            ans += v * price
-            price -= 25
-            exclude.add(m)
-            exclude.add(t)
+    ans = -400
+    for prices in permutations(PRICES):
+        for movies in permutations(MOVIES):
+            temp = 0
+            for i in range(0, 4):
+                if slots[i][movies[i]] == 0:
+                    temp -= 100
+                else:
+                    temp += slots[i][movies[i]] * prices[i]
 
-
-    for m in MOVIES:
-        if m not in exclude:
-            ans -= 100
+            ans = max(ans, temp)
 
     return ans
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     T = int(input().rstrip())
     total = 0
     for i in range(0, T):
